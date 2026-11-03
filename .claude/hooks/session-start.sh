@@ -10,15 +10,15 @@ HOOK=.claude/hooks/session-start.sh
 # ffmpeg (gói hệ thống: kiểm mỗi lần, có rồi thì thôi)
 command -v ffmpeg >/dev/null || { apt-get update -qq && apt-get install -y -qq ffmpeg; }
 
-# Python ~/.asr: cài lại khi hook này đổi (danh sách gói nằm ngay dưới)
+# Python ~/.asr: cài lại khi hook này hoặc danh sách gói (scripts/asr/requirements.txt) đổi
 ASR="$HOME/.asr"; asr_hash="$ASR/.session-start.sha256"
 if ! sha256sum --check --status "$asr_hash" 2>/dev/null; then
   rm -f "$asr_hash"
   export PATH="$HOME/.local/bin:$PATH"
   command -v uv >/dev/null || python3 -m pip install -q --user uv
   [ -x "$ASR/bin/python" ] || uv venv -q "$ASR"
-  VIRTUAL_ENV="$ASR" uv pip install -q faster-whisper numpy imageio pillow "rembg[cpu]" opencv-python-headless
-  sha256sum "$HOOK" > "$asr_hash"
+  VIRTUAL_ENV="$ASR" uv pip install -q -r scripts/asr/requirements.txt
+  sha256sum "$HOOK" scripts/asr/requirements.txt > "$asr_hash"
 fi
 
 # node_modules: cài lại khi package.json / package-lock.json / hook đổi
@@ -28,3 +28,15 @@ if ! sha256sum --check --status "$npm_hash" 2>/dev/null; then
   npm install --no-audit --no-fund
   sha256sum "$HOOK" package.json package-lock.json > "$npm_hash"
 fi
+
+# Tải sẵn model nhận diện giọng (~3 GB) + tách người ở chế độ nền, để lúc tới bước nhận diện không phải chờ.
+# Có rồi thì xong ngay. Theo dõi: tail ~/.asr/tai-model.log (dòng cuối "XONG" là đã có).
+LOG="$ASR/tai-model.log"
+PID="$ASR/tai-model.pid"
+if ! { [ -f "$PID" ] && kill -0 "$(cat "$PID")" 2>/dev/null; }; then
+  setsid nohup "$ASR/bin/python" -I scripts/asr/tai-model.py > "$LOG" 2>&1 < /dev/null &
+  echo $! > "$PID"
+fi
+
+# Báo tình trạng máy cho phiên (thiếu gì thì in lệnh sửa)
+node scripts/kiem-may.mjs --gon || true
