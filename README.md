@@ -12,6 +12,8 @@ Chạy bằng [HyperFrames](https://github.com/heygen-com/hyperframes) (HTML + G
 
 ## Bắt đầu nhanh
 
+> **Người mới, chưa biết gì:** chỉ cần đọc [`BAT-DAU.md`](BAT-DAU.md) (1 trang, không gõ lệnh). Phần dưới dành cho người đã quen.
+
 **Người mới:** đọc [`HUONG-DAN.md`](HUONG-DAN.md), đi từ tạo tài khoản GitHub, lấy repo về làm của riêng, tới video đầu tiên và cách dạy luật mới.
 
 **Trên cloud (claude.ai/code, khuyên dùng):** không cài gì. Để Network của môi trường là **Full** (một lần), mở phiên trên repo rồi dán:
