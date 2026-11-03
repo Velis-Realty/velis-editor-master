@@ -2,6 +2,11 @@
 
 Bộ công cụ này nhận **clip quay thật về bất động sản** (người nói trước máy, cảnh quay dự án) và dựng thành video dọc 1080×1920: cắt nhịp, chữ chốt, minh họa, bản đồ, SFX, màu. Người làm chính là **Claude Code** chạy trên cloud của Claude. Anh/chị gửi clip, nói muốn gì, duyệt bản xem trước và góp ý. Claude ghi lại những gì anh/chị dạy vào repo, nên video sau làm đúng ý hơn video trước.
 
+> **Đường ngắn nhất**
+> - **Trên cloud (không cài gì):** làm bước 1 → 4 một lần, rồi mỗi video chỉ cần bước 5: mở phiên, dán link clip, nói "edit video cho anh X".
+> - **Trên máy của mình:** clone repo, chạy **một lệnh** `bash scripts/cai-dat.sh`, rồi gõ `claude`. Xem [chạy trên máy của mình](#chạy-trên-máy-của-mình).
+> - Không chắc máy đủ đồ chưa: `npm run kiem-may` in ✔ / ✘ từng mục kèm lệnh sửa.
+
 Anh/chị sẽ có **một repo riêng**, private, chỉ mình anh/chị có quyền. Luật anh/chị dạy chỉ nằm trong repo đó. Repo không nối với ai khác.
 
 Làm lần lượt từ bước 1 đến bước 6 (bước 7 khi muốn nhận bản cập nhật). Mỗi bước có phần **Xong khi** để biết đã làm đúng. Chỗ nào ghi **(người giao)** là việc người giao bộ công cụ làm, anh/chị chỉ cần chờ.
@@ -90,7 +95,7 @@ Mỗi phiên chạy trên một máy ảo riêng, lấy repo từ GitHub về, l
 
 ### 5b. Giao việc
 
-Tạo phiên mới (repo của mình, môi trường `dung-video`) và nói tự nhiên, càng rõ càng ít bị hỏi lại:
+Tạo phiên mới (repo của mình, môi trường đã để Network **Full** ở bước 4) và nói tự nhiên, càng rõ càng ít bị hỏi lại:
 
 ```
 Edit video cho anh Tuấn, dự án Sunrise Riverside.
@@ -215,43 +220,37 @@ Không bắt buộc. Khi đã quen cloud, chạy trên máy giúp clip dài nhan
 
 **Yêu cầu:** macOS, Linux, hoặc Windows 10/11 có **WSL2**; RAM từ 8 GB (nên 16 GB); ổ trống khoảng 15 GB.
 
-**Cài công cụ.** Mọi lệnh gõ trong Terminal (Windows: app Ubuntu sau khi cài WSL).
-
-macOS:
+**Cần trước:** Windows thì cài WSL2 (PowerShell quyền Administrator: `wsl --install -d Ubuntu`, khởi động lại, mở app Ubuntu, mọi lệnh sau gõ trong đó; để repo trong `~` của Ubuntu, **không** để trong `/mnt/c/...` vì chạy rất chậm). macOS thì cài Homebrew:
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-```bash
-brew install git node@22 ffmpeg python uv gh
-```
-
-Windows: mở PowerShell quyền Administrator, chạy `wsl --install -d Ubuntu`, khởi động lại máy, mở app Ubuntu, rồi làm như Linux. Để repo trong `~` của Ubuntu, **không** để trong `/mnt/c/...` (chạy rất chậm).
-
-Linux (Ubuntu / Debian):
+**1. Lấy repo về** (thay `<ten-ban>` bằng tên GitHub; repo private thì lần đầu GitHub hỏi đăng nhập):
 
 ```bash
-sudo apt update && sudo apt install -y git ffmpeg python3 python3-venv curl build-essential gh
+git clone https://github.com/<ten-ban>/bds-editor.git ~/bds-editor && cd ~/bds-editor
 ```
+
+**2. Cài mọi thứ bằng một lệnh.** Script tự cài phần còn thiếu (git, FFmpeg, Python, Node 22, uv, thư viện Node, Python `~/.asr` cho nhận diện giọng, Chromium), kiểm máy, rồi dựng thử. Lần đầu mất 5–15 phút; chạy lại bao nhiêu lần cũng được, phần đã có thì bỏ qua:
 
 ```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+bash scripts/cai-dat.sh
 ```
 
-Đóng Terminal, mở lại:
+Thấy `✔ Máy đã sẵn sàng` và `✔ Dựng thử đạt` là xong. Muốn chắc hơn thì dựng video mẫu đủ 5 bước, ra `build/example/output.mp4` khoảng 15,5 giây:
 
 ```bash
-nvm install 22 && curl -LsSf https://astral.sh/uv/install.sh | sh
+npm run example
 ```
 
-Claude Code (mọi hệ điều hành). Cài xong mở Terminal mới, gõ `claude`, đăng nhập theo trình duyệt:
+**3. Claude Code và GitHub** (một lần). Cài Claude Code, mở Terminal mới, gõ `claude` và đăng nhập theo trình duyệt:
 
 ```bash
 curl -fsSL https://claude.ai/install.sh | bash
 ```
 
-Git và GitHub (chọn **GitHub.com → HTTPS → Login with a web browser**):
+Để push được lên repo của mình (chọn **GitHub.com → HTTPS → Login with a web browser**; macOS: `brew install gh`, Ubuntu: `sudo apt install -y gh`):
 
 ```bash
 git config --global user.name "Nguyễn Văn A" && git config --global user.email "email-github@example.com"
@@ -261,27 +260,25 @@ git config --global user.name "Nguyễn Văn A" && git config --global user.emai
 gh auth login && gh auth setup-git
 ```
 
-**Lấy repo về và cài thư viện:**
+**Mỗi video:**
 
-```bash
-git clone https://github.com/<ten-ban>/bds-editor.git ~/bds-editor && cd ~/bds-editor && npm install
-```
+1. Tạo chỗ để clip (tên chữ thường, số, gạch nối, dạng `<khach>-<du-an>`):
 
-```bash
-npx hyperframes doctor && npx playwright install --with-deps chromium
-```
+   ```bash
+   cd ~/bds-editor && git pull && npm run new -- tuan-sunrise
+   ```
 
-```bash
-uv venv ~/.asr && VIRTUAL_ENV=~/.asr uv pip install faster-whisper numpy imageio pillow "rembg[cpu]" opencv-python-headless
-```
+2. Chép clip vào `work/tuan-sunrise/01_footage/cam_a/` (máy chính, người nói), `cam_b/` (máy phụ), `drone/` hoặc `broll/` (cảnh dự án); mic rời vào `02_audio/voiceover/`; logo, bảng giá vào `03_assets/`.
+3. Gõ `claude` và giao việc như bước 5b, thay link bằng thư mục:
 
-```bash
-npm run example
-```
+   ```
+   Edit video tuan-sunrise cho anh Tuấn, dự án Sunrise Riverside. Clip ở work/tuan-sunrise/.
+   Khách mới: màu nhấn #19C3B1, CTA "Nhắn anh Tuấn để nhận bảng giá". Đăng TikTok.
+   ```
 
-Có `build/example/output.mp4` khoảng 15,5 giây là xong.
+4. Bản nháp và bản cuối nằm ở `work/tuan-sunrise/05_exports/`. Duyệt xong thì bảo Claude "commit và push" (clip và file render không lên GitHub).
 
-**Làm việc:** chép clip vào `work/<ten-video>/01_footage/cam_a/` (máy chính), `cam_b/` (máy phụ), `drone/` hoặc `broll/` (cảnh phụ), mic rời vào `02_audio/voiceover/`, rồi `cd ~/bds-editor && git pull && claude` và giao việc như bước 6b (thay link bằng đường dẫn thư mục). Bản nháp và bản cuối nằm ở `work/<ten-video>/05_exports/`. Xong thì bảo Claude "commit và push".
+Báo lỗi lạ, thiếu công cụ: chạy `npm run kiem-may` trước, nó chỉ đúng mục thiếu và lệnh sửa.
 
 ---
 
@@ -289,6 +286,7 @@ Có `build/example/output.mp4` khoảng 15,5 giây là xong.
 
 | Triệu chứng | Cách xử lý |
 |---|---|
+| Trên máy của mình báo thiếu ffmpeg, python, `~/.asr`, Chromium… | Chạy `npm run kiem-may` xem thiếu gì, rồi `bash scripts/cai-dat.sh` |
 | Đầu phiên báo hook cài đặt (SessionStart) lỗi | Thường do Network chưa để **Full** (bước 4) nên không tải được gói. Sửa rồi mở phiên mới. Phiên đang chạy thì nhờ Claude: "chạy lại .claude/hooks/session-start.sh" |
 | Không thấy repo của mình khi tạo phiên | Chưa cài Claude GitHub App cho repo đó (bước 3) |
 | Claude báo không push được | Như trên: kiểm Claude GitHub App có repo của mình chưa |
@@ -321,9 +319,14 @@ Phần lớn thời gian chỉ cần nói với Claude. Bảng này để tra kh
 
 | Việc | Lệnh |
 |---|---|
+| Cài mọi thứ (máy của mình) | `bash scripts/cai-dat.sh` |
+| Kiểm máy đủ đồ chưa | `npm run kiem-may` |
 | Dựng thử mẫu | `npm run example` |
-| Dựng một video, không render | `node projects/<video>/build.mjs --no-render` |
-| Dựng và render | `node projects/<video>/build.mjs` |
+| Tạo video mới | `npm run new -- <khach>-<du-an>` |
+| Dựng một video, không render | `node lib/build.mjs projects/<video> --no-render` |
+| Dựng và render | `node lib/build.mjs projects/<video>` |
+| Kiểm định (QC) | `node lib/qc.mjs projects/<video>` (sau render thêm `--asr`) |
+| Xuất bản nháp / bản cuối | `node lib/export.mjs projects/<video> --draft` / `--final` |
 | Kiểm lỗi template | `cd build/<video> && npx hyperframes lint` |
 | Kiểm chữ chốt | `node scripts/qa/kt-check.cjs build/<video>/index.html <composition-id>` |
 | Nhận diện giọng | `~/.asr/bin/python -I scripts/asr/transcribe.py clip.mp4 work/asr.json "Tên riêng, địa danh"` |

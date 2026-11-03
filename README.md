@@ -10,14 +10,25 @@ Bộ công cụ dựng video bất động sản dọc 1080×1920 từ **clip qu
 
 Chạy bằng [HyperFrames](https://github.com/heygen-com/hyperframes) (HTML + GSAP → MP4), offline.
 
-## Cài
+## Bắt đầu nhanh
 
-**Người mới:** đọc [`HUONG-DAN.md`](HUONG-DAN.md), đi từ tạo tài khoản GitHub, cài công cụ, lấy repo về làm của riêng, tới video đầu tiên và cách dạy luật mới.
+**Người mới:** đọc [`HUONG-DAN.md`](HUONG-DAN.md), đi từ tạo tài khoản GitHub, lấy repo về làm của riêng, tới video đầu tiên và cách dạy luật mới.
 
-Cần Node.js 22+, FFmpeg, Python 3.
+**Trên cloud (claude.ai/code):** không cài gì. Để Network của môi trường là **Full**, mở phiên trên repo, dán link clip và nói "edit video cho anh X". Repo tự cài khi mở phiên (`.claude/hooks/session-start.sh`).
+
+**Trên máy của mình** (macOS, Linux, Windows qua WSL2):
+
+```bash
+git clone https://github.com/<ten-ban>/<repo>.git && cd <repo>
+bash scripts/cai-dat.sh          # cài mọi thứ còn thiếu, kiểm máy, dựng thử
+npm run new -- tuan-sunrise      # tạo work/tuan-sunrise/01_footage/... rồi chép clip vào
+claude                           # "Edit video tuan-sunrise cho anh Tuấn, clip ở work/tuan-sunrise/"
+```
+
+Lệnh hay dùng:
 
 ```
-npm install
+npm run kiem-may         # máy đủ đồ chưa: ✔ / ✘ từng mục kèm lệnh sửa
 npm run demo             # kiểm thư viện: dựng tests/demo (media tổng hợp), không render
 npm run example          # video mẫu đủ 5 bước (tạo nguồn → tiếp nhận → dựng → render) → build/example/output.mp4
 ```

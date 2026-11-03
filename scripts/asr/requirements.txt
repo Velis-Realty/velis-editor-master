@@ -1,0 +1,8 @@
+# Gói Python cho ~/.asr (nhận diện giọng, tách người, kiểm hình). Dùng chung cho
+# .claude/hooks/session-start.sh (cloud) và scripts/cai-dat.sh (máy của mình).
+faster-whisper
+numpy
+imageio
+pillow
+rembg[cpu]
+opencv-python-headless
