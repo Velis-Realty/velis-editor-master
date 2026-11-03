@@ -14,7 +14,15 @@ Chạy bằng [HyperFrames](https://github.com/heygen-com/hyperframes) (HTML + G
 
 **Người mới:** đọc [`HUONG-DAN.md`](HUONG-DAN.md), đi từ tạo tài khoản GitHub, lấy repo về làm của riêng, tới video đầu tiên và cách dạy luật mới.
 
-**Trên cloud (claude.ai/code):** không cài gì. Để Network của môi trường là **Full**, mở phiên trên repo, dán link clip và nói "edit video cho anh X". Repo tự cài khi mở phiên (`.claude/hooks/session-start.sh`).
+**Trên cloud (claude.ai/code, khuyên dùng):** không cài gì. Để Network của môi trường là **Full** (một lần), mở phiên trên repo rồi dán:
+
+```
+Edit video cho anh Tuấn, dự án Sunrise Riverside.
+Clip và tài liệu: <link Google Drive, để "Bất kỳ ai có đường liên kết">.
+CTA: "Nhắn anh Tuấn để nhận bảng giá". Đăng TikTok.
+```
+
+Khi mở phiên, `.claude/hooks/session-start.sh` tự cài FFmpeg, Python, thư viện Node, tải sẵn model giọng nói ở chế độ nền và in một dòng `Kiểm máy`. Claude tải clip bằng `npm run tai-clip -- <link> <khach>-<du-an>`.
 
 **Trên máy của mình** (macOS, Linux, Windows qua WSL2):
 

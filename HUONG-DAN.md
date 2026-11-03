@@ -3,7 +3,7 @@
 Bộ công cụ này nhận **clip quay thật về bất động sản** (người nói trước máy, cảnh quay dự án) và dựng thành video dọc 1080×1920: cắt nhịp, chữ chốt, minh họa, bản đồ, SFX, màu. Người làm chính là **Claude Code** chạy trên cloud của Claude. Anh/chị gửi clip, nói muốn gì, duyệt bản xem trước và góp ý. Claude ghi lại những gì anh/chị dạy vào repo, nên video sau làm đúng ý hơn video trước.
 
 > **Đường ngắn nhất**
-> - **Trên cloud (không cài gì):** làm bước 1 → 4 một lần, rồi mỗi video chỉ cần bước 5: mở phiên, dán link clip, nói "edit video cho anh X".
+> - **Trên cloud (không cài gì, khuyên dùng):** làm bước 1 → 4 một lần. Từ đó mỗi video chỉ là: tạo phiên mới trên repo của mình → dán câu mẫu ở [5b](#5b-giao-việc) (link Drive + tên khách + CTA) → chờ bản nháp → góp ý → "Duyệt". Mở phiên là repo tự cài và tự tải sẵn model giọng nói, không phải gõ lệnh nào.
 > - **Trên máy của mình:** clone repo, chạy **một lệnh** `bash scripts/cai-dat.sh`, rồi gõ `claude`. Xem [chạy trên máy của mình](#chạy-trên-máy-của-mình).
 > - Không chắc máy đủ đồ chưa: `npm run kiem-may` in ✔ / ✘ từng mục kèm lệnh sửa.
 
@@ -103,6 +103,14 @@ Clip và tài liệu: <link Google Drive>.
 Khách mới: màu nhấn xanh ngọc #19C3B1, CTA "Nhắn anh Tuấn để nhận bảng giá". Đăng TikTok.
 ```
 
+Câu mẫu, chép rồi thay phần trong `< >`:
+
+```
+Edit video cho <anh/chị Tên>, dự án <Tên dự án>.
+Clip và tài liệu: <link Google Drive>.
+CTA: "<câu kêu gọi cuối video>". Đăng <TikTok / Reels / Shorts>.
+```
+
 Claude cần biết ba điều, thiếu thì nó hỏi **một lần**:
 - **Khách là ai.** Mỗi khách có cấu hình riêng ở `clients/<khach>/brand.json`: màu, LUT, CTA, logo, lịch sử phong cách. Khách mới thì Claude tạo từ `clients/_mau/`.
 - **CTA cuối video:** câu kêu gọi, ví dụ "Nhắn tin để nhận bảng giá".
@@ -111,9 +119,9 @@ Claude cần biết ba điều, thiếu thì nó hỏi **một lần**:
 ### 5c. Claude làm gì
 
 Không cần nhớ, chỉ để biết đang tới đâu. Claude đi đúng 5 bước hậu kỳ chuyên nghiệp (`docs/VAN-HANH.md` mục 3):
-1. **Tiếp nhận:** đọc luật, tải clip về đúng cây thư mục (A-roll người nói, B-roll cảnh dự án, mic rời, nhạc), kiểm từng clip (độ phân giải, Log hay không), tạo bản dựng nhẹ.
+1. **Tiếp nhận:** đọc luật, tải clip từ link về (`npm run tai-clip`), xếp vào đúng cây thư mục (A-roll người nói, B-roll cảnh dự án, mic rời, nhạc), kiểm từng clip (độ phân giải, Log hay không), tạo bản dựng nhẹ.
 2. **Dựng thô:** đồng bộ tiếng mic rời với máy quay, nhận diện lời nói, chọn lượt nói tốt nhất, cắt chỗ vấp, chỗ im.
-3. **Dựng tinh:** đổi máy, phóng cận, chèn B-roll che điểm cắt, J-cut / L-cut cho êm tai; xử lý âm 4 lớp (giọng, tiếng môi trường, SFX, nhạc hạ dưới giọng). Mỗi phiên mới phải tải model nhận diện giọng khoảng 3 GB, mất vài phút.
+3. **Dựng tinh:** đổi máy, phóng cận, chèn B-roll che điểm cắt, J-cut / L-cut cho êm tai; xử lý âm 4 lớp (giọng, tiếng môi trường, SFX, nhạc hạ dưới giọng).
 4. **Màu và chữ:** sửa màu, phối màu bằng LUT; hook 3 giây đầu; chữ chốt, minh họa, bản đồ. Kế hoạch ghi ở `SHOTBOOK.md`.
 5. **Kiểm và xuất:** tự kiểm (chữ, khung đen, hình đứng im, độ to, SFX có che lời không), render **một lần**, gửi bản nháp nhẹ vào khung chat kèm danh sách khối chữ.
 
@@ -291,7 +299,8 @@ Báo lỗi lạ, thiếu công cụ: chạy `npm run kiem-may` trước, nó ch�
 | Không thấy repo của mình khi tạo phiên | Chưa cài Claude GitHub App cho repo đó (bước 3) |
 | Claude báo không push được | Như trên: kiểm Claude GitHub App có repo của mình chưa |
 | Không tải được clip hay model, báo bị chặn | Network access của môi trường chưa để **Full** (bước 4) |
-| Link Google Drive tải về file HTML nhỏ | Link chưa để "Bất kỳ ai có đường liên kết" (bước 5a) |
+| Link Google Drive tải về file HTML nhỏ, hoặc `tai-clip` báo lỗi | Link chưa để "Bất kỳ ai có đường liên kết" (bước 5a) |
+| Đầu phiên báo `Kiểm máy: ✘ …` | Làm theo lệnh in sau dấu →, hoặc nói với Claude "sửa theo kiểm máy". `! Model … đang tải nền` là bình thường, chờ vài phút |
 | Mất file render | Máy ảo đã bị xóa. Lần sau tải về ngay khi Claude gửi. Dữ liệu dựng đã push thì bảo Claude render lại |
 | Không thấy nút **Use this template** | Chưa chấp nhận lời mời, hoặc người giao chưa bật Template repository. Báo người giao |
 | Chữ tiếng Việt mất dấu, dấu bị cắt | Nói với Claude: "giây X mất dấu chữ Y" |
@@ -323,6 +332,7 @@ Phần lớn thời gian chỉ cần nói với Claude. Bảng này để tra kh
 | Kiểm máy đủ đồ chưa | `npm run kiem-may` |
 | Dựng thử mẫu | `npm run example` |
 | Tạo video mới | `npm run new -- <khach>-<du-an>` |
+| Tải clip từ link Drive / Dropbox | `npm run tai-clip -- <link> <khach>-<du-an>` |
 | Dựng một video, không render | `node lib/build.mjs projects/<video> --no-render` |
 | Dựng và render | `node lib/build.mjs projects/<video>` |
 | Kiểm định (QC) | `node lib/qc.mjs projects/<video>` (sau render thêm `--asr`) |

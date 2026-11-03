@@ -7,6 +7,7 @@
     "kiem-may": "node scripts/kiem-may.mjs",
     "demo": "node tests/demo/make-media.mjs && node lib/build.mjs tests/demo --no-render",
     "new": "node scripts/new-video.mjs",
+    "tai-clip": "node scripts/tai-clip.mjs",
     "example": "node projects/example/make-media.mjs && node lib/ingest.mjs projects/example && node lib/assemble.mjs projects/example && node lib/build.mjs projects/example",
     "qc": "node lib/qc.mjs",
     "export": "node lib/export.mjs",

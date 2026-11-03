@@ -28,3 +28,15 @@ if ! sha256sum --check --status "$npm_hash" 2>/dev/null; then
   npm install --no-audit --no-fund
   sha256sum "$HOOK" package.json package-lock.json > "$npm_hash"
 fi
+
+# Tải sẵn model nhận diện giọng (~3 GB) + tách người ở chế độ nền, để lúc tới bước nhận diện không phải chờ.
+# Có rồi thì xong ngay. Theo dõi: tail ~/.asr/tai-model.log (dòng cuối "XONG" là đã có).
+LOG="$ASR/tai-model.log"
+PID="$ASR/tai-model.pid"
+if ! { [ -f "$PID" ] && kill -0 "$(cat "$PID")" 2>/dev/null; }; then
+  setsid nohup "$ASR/bin/python" -I scripts/asr/tai-model.py > "$LOG" 2>&1 < /dev/null &
+  echo $! > "$PID"
+fi
+
+# Báo tình trạng máy cho phiên (thiếu gì thì in lệnh sửa)
+node scripts/kiem-may.mjs --gon || true

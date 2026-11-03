@@ -6,3 +6,4 @@ imageio
 pillow
 rembg[cpu]
 opencv-python-headless
+gdown

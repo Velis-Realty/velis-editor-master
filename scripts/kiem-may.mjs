@@ -44,6 +44,14 @@ kiem("Python ~/.asr (nhận diện giọng, tách người)", true, () => {
   const m = (r.stderr.match(/No module named '([^']+)'/) || [])[1];
   return { ok: false, ghi: m ? `thiếu gói ${m}` : "lỗi import", sua: "VIRTUAL_ENV=~/.asr uv pip install -r scripts/asr/requirements.txt" };
 });
+kiem("Model nhận diện giọng + tách người", false, () => {
+  const log = path.join(os.homedir(), ".asr", "tai-model.log"), nd = fs.existsSync(log) ? fs.readFileSync(log, "utf8") : "";
+  if (/^XONG$/m.test(nd)) return { ok: true, ghi: "đã tải" };
+  const pid = Number(fs.existsSync(log.replace(/\.log$/, ".pid")) ? fs.readFileSync(log.replace(/\.log$/, ".pid"), "utf8") : 0);
+  let chayNen = false; try { chayNen = pid > 0 && process.kill(pid, 0); } catch {}
+  if (chayNen) return { ok: false, ghi: "đang tải nền, xem tail ~/.asr/tai-model.log" };
+  return { ok: false, ghi: "chưa tải sẵn, lần nhận diện đầu sẽ tự tải ~3 GB", sua: "~/.asr/bin/python -I scripts/asr/tai-model.py" };
+});
 kiem("Git: tên + email", false, () => {
   const n = chay("git", ["config", "user.name"]), e = chay("git", ["config", "user.email"]);
   return n && e ? { ok: true, ghi: `${n} <${e}>` } : { ok: false, sua: 'git config --global user.name "Tên" && git config --global user.email "email-github@..."' };
@@ -58,6 +66,13 @@ kiem("Ổ trống ≥ 10 GB", false, () => {
 });
 if (HE === "wsl" && ROOT.startsWith("/mnt/")) muc.push({ ten: "Vị trí repo", batBuoc: false, ok: false, ghi: `đang ở ${ROOT}`, sua: "chép repo vào ~ của Ubuntu (để trong /mnt/c chạy rất chậm)" });
 
+const GON = process.argv.includes("--gon");
+if (GON) {
+  // Bản gọn cho hook đầu phiên: một dòng khi đủ, chỉ in mục thiếu khi không đủ
+  const hong = muc.filter((m) => !m.ok);
+  console.log(hong.length ? `Kiểm máy: ${hong.map((m) => `${m.batBuoc ? "✘" : "!"} ${m.ten}${m.ghi ? ` (${m.ghi})` : ""}${m.sua ? ` → ${m.sua}` : ""}`).join(" · ")}` : "Kiểm máy: ✔ đủ đồ dựng video");
+  process.exit(0);
+}
 console.log(`\nKiểm máy dựng video · ${{ mac: "macOS", linux: "Linux", wsl: "Windows (WSL)", khac: process.platform }[HE]}${CLOUD ? " · cloud" : ""}\n`);
 for (const m of muc) {
   console.log(`  ${m.ok ? "✔" : m.batBuoc ? "✘" : "!"} ${m.ten}${m.ghi ? `  (${m.ghi})` : ""}`);
@@ -69,4 +84,5 @@ if (thieu.length) {
   console.log(`\n✘ Thiếu ${thieu.length} mục bắt buộc. Cách nhanh nhất: bash scripts/cai-dat.sh (hoặc chạy từng lệnh → ở trên).\n`);
   process.exit(1);
 }
-console.log(`\n✔ Máy đã sẵn sàng. Thử: npm run example  ·  Làm video: claude rồi nói "edit video cho anh X, clip ở work/<ten-video>/"\n`);
+console.log(CLOUD ? `\n✔ Máy đã sẵn sàng. Tải clip: npm run tai-clip -- <link Drive> <khach>-<du-an>\n`
+  : `\n✔ Máy đã sẵn sàng. Thử: npm run example  ·  Làm video: claude rồi nói "edit video cho anh X, clip ở work/<ten-video>/"\n`);
