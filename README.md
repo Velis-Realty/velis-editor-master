@@ -1,5 +1,7 @@
 # bds-editor
 
+> **Người mới: chỉ cần đọc [`BAT-DAU.md`](BAT-DAU.md)** (hoặc tải bản in [`Huong-dan-lam-video.pdf`](Huong-dan-lam-video.pdf)). Từng cú bấm, không gõ lệnh. Phần còn lại của trang này dành cho người đã quen.
+
 Bộ công cụ dựng video bất động sản dọc 1080×1920 từ **clip quay thật** (sale hay chủ đầu tư nói trước máy, quay dự án). Dùng với Claude Code: thả clip thô vào, Claude dựng ra video hoàn chỉnh gồm:
 - cắt nhịp, bỏ khoảng lặng;
 - hook 3 giây theo góc của câu mở;
@@ -12,9 +14,7 @@ Chạy bằng [HyperFrames](https://github.com/heygen-com/hyperframes) (HTML + G
 
 ## Bắt đầu nhanh
 
-> **Người mới, chưa biết gì:** chỉ cần đọc [`BAT-DAU.md`](BAT-DAU.md) (1 trang, không gõ lệnh). Phần dưới dành cho người đã quen.
-
-**Người mới:** đọc [`HUONG-DAN.md`](HUONG-DAN.md), đi từ tạo tài khoản GitHub, lấy repo về làm của riêng, tới video đầu tiên và cách dạy luật mới.
+Bản chi tiết (dạy luật mới, nhận bản cập nhật, lỗi hay gặp): [`HUONG-DAN.md`](HUONG-DAN.md).
 
 **Trên cloud (claude.ai/code, khuyên dùng):** không cài gì. Để Network của môi trường là **Full** (một lần), mở phiên trên repo rồi dán:
 
@@ -53,7 +53,8 @@ Mỗi khách có cấu hình riêng ở `clients/<khach>/brand.json`: màu, LUT,
 
 | File | Nội dung |
 |---|---|
-| `HUONG-DAN.md` | hướng dẫn chi tiết cho người mới |
+| `BAT-DAU.md`, `Huong-dan-lam-video.pdf` | người mới: từng cú bấm tới video đầu tiên |
+| `HUONG-DAN.md` | hướng dẫn chi tiết: dạy luật, cập nhật, chạy trên máy, lỗi hay gặp |
 | `CLAUDE.md` | điểm vào cho Claude |
 | `lib/README.md` | thư viện dựng: `plan.json`, phong cách S1–S5, công thức R1–R7 |
 | `docs/PHONG-CACH-ME4REAL.md` | bộ mã phong cách đo từ editor BĐS chuyên nghiệp |

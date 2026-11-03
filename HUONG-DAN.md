@@ -2,7 +2,7 @@
 
 Bộ công cụ này nhận **clip quay thật về bất động sản** (người nói trước máy, cảnh quay dự án) và dựng thành video dọc 1080×1920: cắt nhịp, chữ chốt, minh họa, bản đồ, SFX, màu. Người làm chính là **Claude Code** chạy trên cloud của Claude. Anh/chị gửi clip, nói muốn gì, duyệt bản xem trước và góp ý. Claude ghi lại những gì anh/chị dạy vào repo, nên video sau làm đúng ý hơn video trước.
 
-> **Chưa biết gì thì đọc [`BAT-DAU.md`](BAT-DAU.md) trước** (1 trang, đủ để làm video đầu tiên). File này là bản chi tiết.
+> **Chưa biết gì thì đọc [`BAT-DAU.md`](BAT-DAU.md) trước** (từng cú bấm tới video đầu tiên; bản in `Huong-dan-lam-video.pdf`). File này là bản chi tiết.
 >
 > **Đường ngắn nhất**
 > - **Trên cloud (không cài gì, khuyên dùng):** làm bước 1 → 4 một lần. Từ đó mỗi video chỉ là: tạo phiên mới trên repo của mình → dán câu mẫu ở [5b](#5b-giao-việc) (link Drive + tên khách + CTA) → chờ bản nháp → góp ý → "Duyệt". Mở phiên là repo tự cài và tự tải sẵn model giọng nói, không phải gõ lệnh nào.
